@@ -1,0 +1,102 @@
+<?php
+
+return [
+    'Dashboard'=>'Dashboard',
+    'add'=>'Add',
+    'edit'=>'Edit',
+    'delete'=>'Delete',
+    'read'=>'Read',
+    'create'=>'Create',
+    'update'=>'Update',
+    'search'=>'Search',
+    'print'=>'Print',
+    'show_products'=>'Show Products',
+    'show'=>'Show',
+    'show_details'=>'Show Details',
+    'details'=>'Details',
+    'answer'=>'Answer',
+    'add_order'=>'Add Order',
+    'edit_order'=>'Edit Order',
+    'more_info'=>'More Info',
+
+    'no_data_found'=>'No Data Found',
+
+    'admins'=>'Admins',
+    'users'=>'Users',
+    'categories'=>'Categories',
+    'all_categories'=>'All Categories',
+    'products'=>'Products',
+    'clients'=>'Clients',
+    'previous_orders'=>'Previous Orders',
+    'subcategories'=>'Sub Categories',
+    'selections'=>'Selections',
+    'questions'=>'Questions',
+    'question'=>'Question',
+    'advertisements'=>'Advertisements',
+    'selection_name'=>'Selection Name',
+
+    'name'=>'Name',
+    'first_name'=>'First Name',
+    'last_name'=>'Last Name',
+    'email'=>'Email',
+    'password'=>'Password',
+    'password_confirmation'=>'Password Confirmation',
+    'choose_pic'=>'Choose Picture',
+    'phone'=>'Phone',
+    'address'=>'Address',
+    'picture'=>'Picture',
+    'purchase_price'=>'Purchase Price',
+    'sale_price'=>'Sale Price',
+    'stock'=>'Stock',
+    'description'=>'Description',
+    'profit'=>'Profit',
+    'products_count'=>'Products Count',
+    'related_products'=>'Related Products',
+    'orders'=>'Orders',
+    'price'=>'Price',
+    'product'=>'Product',
+    'quantity'=>'Quantity',
+    'total'=>'Total',
+    'client_name'=>'Client Name',
+    'status'=>'Status',
+    'created_at'=>'Created At',
+    'category'=>'Category',
+    'text'=>'Text',
+    'answer_type'=>'Answer Type',
+    'choose_questions'=>'Choose Questions',
+    'image'=>'Image',
+    'user'=>'User',
+    'subcategory'=>'Subcategory',
+    'continue_with_facebook'=>'Continue With Facebook',
+    'icon'=>'Icon',
+    'home'=>'Home',
+    'ads_statistics'=>'Advertisements Statistics',
+    'action'=>'Action',
+
+    'added_successfully'=>'Added Successfully',
+    'updated_successfully'=>'Updated Successfully',
+    'deleted_successfully'=>'Deleted Successfully',
+
+    'stock_error'=>'The Quantity Requested is bigger than stock',
+    
+    'permissions'=>'Permissions',
+    'login'=>'Login',
+    'Register'=>'Register',
+    'remember_me'=>'Remember Me',
+    'logout'=>'Logout',
+    'Forgot Your Password?'=>'Forgot Your Password?',
+
+
+
+    'ar'=>[
+        'name'=>'Name in Arabic',
+        'description'=>'Description in Arabic',
+
+    ],
+    'en'=>[
+        'name'=>'Name in English',
+        'description'=>'Description in English'
+    ],
+
+
+];
