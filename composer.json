@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.0",
         "mcamara/laravel-localization": "^1.5",
         "pragmarx/countries": "^0.7.0",
+        "pusher/pusher-php-server": "~4.0",
         "santigarcor/laratrust": "^5.2"
     },
     "require-dev": {

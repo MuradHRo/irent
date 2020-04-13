@@ -69,7 +69,8 @@
                 </h3>
             </div><!-- /.card-header -->
             <div class="card-body">
-                <canvas id="myChart"  height="300"></canvas>
+                {{--<canvas id="myChart"  height="300"></canvas>--}}
+                <canvas id="line-chart" width="800" height="450"></canvas>
             </div><!-- /.card-body -->
         </div>
 
@@ -77,66 +78,84 @@
     <!-- /.content -->
     @push('scripts')
         <script>
-            var salesChartCanvas = document.getElementById('myChart').getContext('2d');
-            //$('#revenue-chart').get(0).getContext('2d');
+            {{--var salesChartCanvas = document.getElementById('myChart').getContext('2d');--}}
+            {{--var salesChartData = {--}}
+                {{--labels  : [--}}
+                    {{--@foreach($ads_data as $ad_data)--}}
+                    {{--"{{$ad_data->year}}-{{$ad_data->month}}",--}}
+                    {{--@endforeach--}}
+                {{--],--}}
+                {{--datasets: [--}}
+                    {{--{--}}
+                        {{--label               : 'Digital Goods',--}}
+                        {{--backgroundColor     : 'rgba(60,141,188,0.9)',--}}
+                        {{--borderColor         : 'rgba(60,141,188,0.8)',--}}
+                        {{--pointRadius          : false,--}}
+                        {{--pointColor          : '#3b8bba',--}}
+                        {{--pointStrokeColor    : 'rgba(60,141,188,1)',--}}
+                        {{--pointHighlightFill  : '#fff',--}}
+                        {{--pointHighlightStroke: 'rgba(60,141,188,1)',--}}
+                        {{--fill: false,--}}
+                        {{--data                : [--}}
+                            {{--@foreach($ads_data as $ad_data)--}}
+                                {{--"{{$ad_data->count}}",--}}
+                            {{--@endforeach--}}
+                        {{--]--}}
+                    {{--},--}}
+                {{--]--}}
+            {{--};--}}
 
-            var salesChartData = {
-                labels  : [
-                    @foreach($ads_data as $ad_data)
-                    "{{$ad_data->year}}-{{$ad_data->month}}",
-                    @endforeach
-                ],
-                datasets: [
-                    {
-                        label               : 'Digital Goods',
-                        backgroundColor     : 'rgba(60,141,188,0.9)',
-                        borderColor         : 'rgba(60,141,188,0.8)',
-                        pointRadius          : false,
-                        pointColor          : '#3b8bba',
-                        pointStrokeColor    : 'rgba(60,141,188,1)',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        fill: false,
-                        data                : [
+            {{--var salesChartOptions = {--}}
+                {{--responsive : true,--}}
+                {{--legend: {--}}
+                    {{--display: false--}}
+                {{--},--}}
+                {{--scales: {--}}
+                    {{--xAxes: [{--}}
+                        {{--gridLines : {--}}
+                            {{--display : false,--}}
+                        {{--}--}}
+                    {{--}],--}}
+                    {{--yAxes: [{--}}
+                        {{--gridLines : {--}}
+                            {{--display : false,--}}
+                        {{--}--}}
+                    {{--}]--}}
+                {{--}--}}
+            {{--};--}}
+
+            {{--// This will get the first returned node in the jQuery collection.--}}
+            {{--var salesChart = new Chart(salesChartCanvas, {--}}
+                    {{--type: 'line',--}}
+                    {{--data: salesChartData,--}}
+                    {{--options: salesChartOptions--}}
+                {{--}--}}
+            {{--)--}}
+            new Chart(document.getElementById("line-chart"), {
+                type: 'line',
+                data: {
+                    labels: [
+                        @foreach($ads_data as $ad_data)
+                            "{{$ad_data->year}}-{{$ad_data->month}}",
+                        @endforeach
+                    ],
+                    datasets: [{
+                        data: [
                             @foreach($ads_data as $ad_data)
                                 "{{$ad_data->count}}",
                             @endforeach
-                        ]
-                    },
-                ]
-            }
-
-            var salesChartOptions = {
-                maintainAspectRatio : false,
-                responsive : true,
-                legend: {
-                    display: false
+                        ],
+                        label: "Total Advertisements",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }
+                    ]
                 },
-                scales: {
-                    xAxes: [{
-                        gridLines : {
-                            display : false,
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines : {
-                            display : false,
-                        }
-                    }]
+                options: {
+                    title: {
+                        display: true,
+                    }
                 }
-            }
-
-            // This will get the first returned node in the jQuery collection.
-            // var salesChart = new Chart(salesChartCanvas, {
-            //         type: 'line',
-            //         data: salesChartData,
-            //         options: salesChartOptions
-            //     }
-            // )
-            var myLineChart = new Chart(document.getElementById('myChart'), {
-                type: 'line',
-                data: salesChartData,
-                options: salesChartOptions
             });
         </script>
     @endpush

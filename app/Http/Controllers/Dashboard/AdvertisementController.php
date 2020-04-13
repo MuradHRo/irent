@@ -12,14 +12,24 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class AdvertisementController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read_advertisements'])->only('index');
+        $this->middleware(['permission:create_advertisements'])->only('create','store');
+        $this->middleware(['permission:update_advertisements'])->only('update','edit');
+        $this->middleware(['permission:delete_advertisements'])->only('destroy');
+
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $advertisements=Advertisement::paginate(5);
+        $advertisements=Advertisement::when($request->search,function ($q) use ($request){
+            return $q->where('name','like','%'.$request->search.'%');
+        })->latest()->paginate(5);
         return view('dashboard.advertisements.index',compact('advertisements'));
     }
 
@@ -52,18 +62,27 @@ class AdvertisementController extends Controller
             'texts.*'=>'required',
             'selections.*'=>'required',
             'name'=>'required',
-            'price'=>'numeric|required'
+            'short_description'=>'required|max:50',
+            'price'=>'numeric|required',
+            'price_per'=>'required',
+            'place'=>'required'
         ]);
         $request_data=$request->except('texts','selections','image');
         $request_data['user_id']=auth()->user()->id;
+
+
         // Image
-        if ($request->image)
-        {
-            Image::make($request->image)->resize(300, null, function ($constraint){
-                $constraint->aspectRatio();
-            })->save(public_path('uploads/advertisement_images/'.$request->image->hashName()));
-            // hashName = make name unique to prevent duplication
-            $request_data['image']=$request->image->hashName();
+        if ($request->hasFile('image')) {
+            $images=array();
+            foreach ($request->image as $image)
+            {
+                Image::make($image)->resize(300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save(public_path('uploads/advertisement_images/' . $image->hashName()));
+                // hashName = make name unique to prevent duplication
+                $images[] = $image->hashName();
+            }
+            $request_data['image']=implode(',',$images);
         }//end of if
 
         $advertisement=Advertisement::create($request_data);
@@ -108,7 +127,7 @@ class AdvertisementController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Advertisement  $advertisement
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Respo nse
      */
     public function update(Request $request, Advertisement $advertisement)
     {
@@ -117,32 +136,46 @@ class AdvertisementController extends Controller
             'texts.*'=>'required',
             'selections.*'=>'required',
             'name'=>'required',
-            'price'=>'numeric|required'
+            'short_description'=>'required|max:50',
+            'price'=>'numeric|required',
+            'price_per'=>'required',
+            'place'=>'required'
         ]);
         $request_data=$request->except('texts','selections','image');
 
         // Image
-        if ($request->image && $request->image!='default.png')
-        {
-            if ($advertisement->image != 'default.png')
-            {
-                Storage::disk('public_uploads')->delete('/advertisement_images/'.$advertisement->image);
+        if ($request->hasFile('image')) {
+            foreach (explode(',', $advertisement->image) as $image) {
+                if ($image != 'default.png') {
+                    Storage::disk('public_uploads')->delete('/advertisement_images/' . $image);
+                }
             }
-            Image::make($request->image)->resize(300, null, function ($constraint){
-                $constraint->aspectRatio();
-            })->save(public_path('uploads/advertisement_images/'.$request->image->hashName()));
-            // hashName = make name unique to prevent duplication
-            $request_data['image']=$request->image->hashName();
+
+            $images=array();
+            foreach ($request->image as $image)
+            {
+                Image::make($image)->resize(300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save(public_path('uploads/advertisement_images/' . $image->hashName()));
+                // hashName = make name unique to prevent duplication
+                $images[] = $image->hashName();
+            }
+            $request_data['image']=implode(',',$images);
         }//end of if
+
+
         $advertisement->update($request_data);
 
-        foreach ($request->texts as $question_id=> $text)
-        {
-            $advertisement->answers()->where('question_id',$question_id)->update(['text'=>$text]);
+        if (isset($request->texts)) {
+            foreach ($request->texts as $question_id => $text) {
+                $advertisement->answers()->where('question_id', $question_id)->update(['text' => $text]);
+            }
         }
-        foreach ($request->selections as $question_id=> $selection_id)
-        {
-            $advertisement->answers()->where('question_id',$question_id)->update(['selection_id'=>$selection_id]);
+
+        if (isset($request->selections)) {
+            foreach ($request->selections as $question_id => $selection_id) {
+                $advertisement->answers()->where('question_id', $question_id)->update(['selection_id' => $selection_id]);
+            }
         }
         session()->flash('success',__('site.updated_successfully'));
         return redirect()->route('dashboard.advertisements.index');
@@ -160,7 +193,7 @@ class AdvertisementController extends Controller
         {
             Storage::disk('public_uploads')->delete('/advertisement_images/'.$advertisement->image);
         }
-        $advertisement->delete();
+        $advertisement->forceDelete();
         session()->flash('success',__('site.deleted_successfully'));
         return redirect()->route('dashboard.advertisements.index');
     }

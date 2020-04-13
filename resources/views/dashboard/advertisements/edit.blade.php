@@ -80,16 +80,28 @@
                         <input type="text" name="name" class="form-control" value="{{$advertisement->name}}">
                     </div>
                     <div class="form-group">
+                        <label>@lang('site.short_description')</label>
+                        <textarea name="short_description" class="form-control" cols="30" rows="2" maxlength="50">{{$advertisement->short_description}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>@lang('site.place')</label>
+                        <input name="place" type="search" value="{{$advertisement->place}}" id="address-input" placeholder="@lang('site.search_place')" />
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputFile">@lang('site.picture')</label>
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" name="image" class="custom-file-input" id="image">
+                                <input type="file" name="image[]" class="custom-file-input" id="image" multiple>
                                 <label class="custom-file-label" for="image">@lang('site.choose_pic')</label>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <img src="{{$advertisement->image_path}}" style="width: 100px" class="img-thumbnail mb-3" id="image_preview" alt="">
+                        @if(is_array($advertisement->image_path))
+                            <img src="{{$advertisement->image_path[0]}}" style="width: 100px" class="img-thumbnail" id="image_preview">
+                        @else
+                            <img src="{{$advertisement->image_path}}" style="width: 100px" class="img-thumbnail" id="image_preview">
+                        @endif
                     </div>
                     <div class="form-group">
                         <label>@lang('site.price')</label>
@@ -102,6 +114,15 @@
                                 <span class="input-group-text">.00</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>@lang('site.price_per')</label>
+                        <select name="price_per" class="custom-select">
+                            <option value="">@lang('site.price_per')</option>
+                            <option value="0" {{$advertisement->price_per == 0? 'selected':''}}>@lang('site.weak')</option>
+                            <option value="1" {{$advertisement->price_per == 1? 'selected':''}}>@lang('site.month')</option>
+                            <option value="2" {{$advertisement->price_per == 2? 'selected':''}}>@lang('site.year')</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-info"></i>@lang('site.update')</button>

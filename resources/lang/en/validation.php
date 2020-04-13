@@ -186,6 +186,8 @@ return [
         'question_ids'          =>'Qestions',
         'texts.*'               =>'Text Questions',
         'selections.*'          =>'Multi Choice Questions',
+        'short_description'     =>'Short Description',
+        'subcategory id'        =>'Subcategory',
 
         'ar'                    =>[
             'name'=>'Name in Arabic',

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $(".rating").rating();
     let body=$('body');
     $('.add-selection-btn').on('click',function (e) {
       e.preventDefault();

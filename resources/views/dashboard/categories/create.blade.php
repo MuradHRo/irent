@@ -13,7 +13,6 @@
                         <li class="breadcrumb-item"><a href="{{route('dashboard.index')}}"><i class="fa fa-tachometer-alt"></i> @lang('site.Dashboard')</a></li>
                         <li class="breadcrumb-item"><a href="{{route('dashboard.categories.index')}}">@lang('site.categories')</a></li>
                         <li class="breadcrumb-item active">@lang('site.add')</li>
-
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->

@@ -11,6 +11,14 @@ use Illuminate\Validation\Rule;
 
 class SubcategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read_subcategories'])->only('index');
+        $this->middleware(['permission:create_subcategories'])->only('create','store');
+        $this->middleware(['permission:update_subcategories'])->only('update','edit');
+        $this->middleware(['permission:delete_subcategories'])->only('destroy');
+
+    }
     /**
      * Display a listing of the resource.
      *

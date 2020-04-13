@@ -8,6 +8,14 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{route('index')}}" class="nav-link">@lang('site.home')</a>
         </li>
+        @if(!auth()->user())
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{{route('login')}}" class="nav-link">@lang('site.login')</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{{route('register')}}" class="nav-link">@lang('site.register')</a>
+            </li>
+        @endif
         @if(auth()->user())
             @if(auth()->user()->hasRole('admin|super_admin'))
                 <li class="nav-item d-none d-sm-inline-block">
@@ -34,6 +42,11 @@
                 </li>
             </ul>
         </li>
+        @if(auth()->user())
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{{route('advertisements.create')}}" class="ui teal button tiny"><i class="fa fa-plus mx-1"></i>@lang('site.add_advertisement')</a>
+            </li>
+        @endif
     </ul>
     <!-- SEARCH FORM -->
     {{--<form class="form-inline ml-3">--}}

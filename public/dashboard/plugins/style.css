@@ -75,3 +75,69 @@
 .loginBtn--google:focus {
     background: #E74B37;
 }
+.ui.card>.image:not(.ui)>img, .ui.cards>.card>.image:not(.ui)>img
+{
+    max-height: 200px;
+    width: auto;
+    margin: auto;
+}
+.ui.ribbon.label
+{
+    max-width: max-content;
+    position: absolute;
+    left: calc(0rem - 1.2em);
+    top:100px;
+    z-index: 50;
+}
+.place
+{
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    background-color: white;
+    padding: 3px 5px;
+}
+.my-comment
+{
+    border: 0.6px gray solid!important;
+    padding: 4px!important;
+    border-radius: 7px;
+}
+#edit-comment,
+#delete-comment,
+.sub-image
+{
+    cursor: pointer;
+}
+.modal
+{
+    top: unset!important;
+    right: unset!important;
+    left: unset!important;
+    height: unset!important;
+}
+.direct-chat
+{
+    width: 500px;
+    bottom: 0;
+    margin: 0;
+    right: 20px;
+    position: fixed!important;
+    z-index: 50;
+}
+.search-container
+{
+    background-color: #0d71bb;
+    padding: 10px;
+}
+.search-container .ap-input
+{
+    display: inline;
+    width: unset!important;
+    vertical-align: unset!important;
+    height: 39px!important;
+}
+.search-container .algolia-places
+{
+    width: unset!important;
+}

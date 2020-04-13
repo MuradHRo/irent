@@ -2,6 +2,7 @@
 <html dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}">
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Dashboard</title>
     <!-- Tell the browser to be responsive to screen width -->
@@ -20,6 +21,8 @@
     <link rel="stylesheet" href="{{asset('dashboard/dist/css/adminlte.min.css')}}">
     <!-- Toaster -->
     <link rel="stylesheet" href="{{asset('dashboard/plugins/toastr/toastr.min.css')}}">
+    <!-- Semantic UI -->
+    <link rel="stylesheet" href="{{asset('dashboard/plugins/semantic-ui/semantic.min.css')}}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{asset('dashboard/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
     <!-- Daterange picker -->
@@ -41,7 +44,7 @@
 
     @endif
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
 
     @include('layouts.dashboard._navbar')
 
@@ -49,6 +52,108 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+        @if(auth()->user())
+        <div class="card direct-chat direct-chat-primary collapsed-card">
+            <div class="card-header ui-sortable-handle">
+                <h3 class="card-title">@lang('site.chat')</h3>
+
+                <div class="card-tools">
+                    <span id="num_un_read" data-toggle="tooltip" class="badge badge-primary">0</span>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle">
+                        <i class="fas fa-comments"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!-- Conversations are loaded here -->
+                <div class="direct-chat-messages">
+                        @php
+                            session_start();
+                        @endphp
+                    @if(isset($_SESSION['receiver_id']))
+                        @php
+                            $user_id= $_SESSION['receiver_id'];
+                            $my_id= auth()->user()->id;
+                            $messages=\App\Message::where(function ($query) use ($user_id,$my_id){
+                                $query->where('from',$my_id)->where('to',$user_id);
+                            })->orWhere(function ($query) use ($user_id,$my_id){
+                                $query->where('to',$my_id)->where('from',$user_id);
+                            })->get();
+                            $un_read_msgs= \App\Message::where('to',$my_id)->where('from',$user_id)->where('is_read',0)->get();
+                            foreach ($un_read_msgs as $msg)
+                            {
+                                $msg->update([
+                                    'is_read'=>1
+                                ]);
+                            }
+                        @endphp
+                        @foreach($messages as $message)
+                            @if($message->from == auth()->user()->id)
+                                <!-- Message to the right -->
+                                    <div class="direct-chat-msg right">
+                                        <div class="direct-chat-infos clearfix">
+                                            <span class="direct-chat-name float-right">{{auth()->user()->name}}</span>
+                                            <span class="direct-chat-timestamp float-left">{{$message->time_ago}}</span>
+                                        </div>
+                                        <!-- /.direct-chat-infos -->
+                                        <img class="direct-chat-img" src="{{auth()->user()->image_path}}" alt="message user image">
+                                        <!-- /.direct-chat-img -->
+                                        <div class="direct-chat-text">
+                                            {{$message->message}}
+                                        </div>
+                                        <!-- /.direct-chat-text -->
+                                    </div>
+                                    <!-- /.direct-chat-msg -->
+                            @else
+                                <!-- Message. Default to the left -->
+                                    <div class="direct-chat-msg">
+                                        <div class="direct-chat-infos clearfix">
+                                            <span class="direct-chat-name float-left">{{$message->sender->name}}</span>
+                                            <span class="direct-chat-timestamp float-right">{{$message->time_ago}}</span>
+                                        </div>
+                                        <!-- /.direct-chat-infos -->
+                                        <img class="direct-chat-img" src="{{$message->sender->image_path}}" alt="message user image">
+                                        <!-- /.direct-chat-img -->
+                                        <div class="direct-chat-text">
+                                            {{$message->message}}
+                                        </div>
+                                        <!-- /.direct-chat-text -->
+                                    </div>
+                                    <!-- /.direct-chat-msg -->
+                                @endif
+                            @endforeach
+                    @endif
+                </div>
+                <!--/.direct-chat-messages-->
+
+                <!-- Contacts are loaded here -->
+                <div class="direct-chat-contacts">
+                    <ul class="contacts-list">
+
+                        <!-- End Contact Item -->
+                    </ul>
+                    <!-- /.contacts-list -->
+                </div>
+                <!-- /.direct-chat-pane -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div class="input-group">
+                    <input type="text" name="message" placeholder="@lang('site.type_message')" class="form-control message-text">
+                    <span class="input-group-append">
+                    <button id="message-send" type="button" class="btn btn-primary">@lang('site.send')</button>
+                </span>
+                </div>
+            </div>
+            <!-- /.card-footer-->
+        </div>
+        @endif
         @yield('content')
     </div>
 
@@ -78,6 +183,7 @@
     $.widget.bridge('uibutton', $.ui.button);
 
 </script>
+<script src="https://js.pusher.com/5.1/pusher.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- ChartJS -->
@@ -112,7 +218,11 @@
 <script src="{{asset('dashboard/plugins/printThis.js')}}"></script>
 {{--Select 2--}}
 <script src="{{asset('dashboard/plugins/select2/js/select2.full.min.js')}}"></script>
-{{-- Custom Java script--}}
+<!-- Semantic UI -->
+<script src="{{asset('dashboard/plugins/semantic-ui/semantic.min.js')}}"></script>
+<!--Algolia places-->
+<script src="https://cdn.jsdelivr.net/npm/places.js@1.18.1"></script>
+    {{-- Custom Java script--}}
                             {{--Selection--}}
 <script src="{{asset('dashboard/dist/js/custom/selections.js')}}"></script>
                             {{--Advertisements--}}
@@ -142,8 +252,138 @@
     });
 //    Check Editor Initialize
     CKEDITOR.config.language="{{app()->getLocale()}}";
-
+//    rating initializing
+    $('.ui.rating')
+        .rating({
+            initialRating: 0,
+            maxRating: 5
+        })
+    ;
+//    Modal
+    $('.ui.modal')
+        .modal()
+    ;
+//    Dropdown
+    $('.ui.dropdown')
+        .dropdown()
+    ;
+//    algolia
+    var placesAutocomplete = places({
+        appId: 'plS3G90OFYMT',
+        apiKey: 'eee42fc88bbf3a54000ddec6e11037f6',
+        container: document.querySelector('#address-input')
+    });
 
 </script>
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var  receiver_id ='{{isset($_SESSION['receiver_id'])?$_SESSION['receiver_id']:''}}';
+    $(document).ready(function () {
+        $(document).on('keyup','.message-text',function (e) {
+            var message= $(this).val();
+            if (e.keyCode == 13 && message.trim()!='' && receiver_id!='')
+            {
+                $(this).val('');
+                $.ajax({
+                    type:'GET',
+                    url:'/message',
+                    data:{'receiver_id':receiver_id,'message':message},
+                    success:function (data) {
+                        var d =$('.direct-chat-messages');
+                        d.append(data);
+                        d.scrollTop(d.prop("scrollHeight"));
+                    },
+                    complete:function () {
+                        
+                    }
+                });
+            }
+        });
+        $(document).on('click','#message-send',function () {
+            var message= $('.message-text').val();
+            if (message.trim()!='' && receiver_id!='')
+            {
+                $('.message-text').val('');
+                $.ajax({
+                    type:'GET',
+                    url:'/message',
+                    data:{'receiver_id':receiver_id,'message':message},
+                    success:function (data) {
+                        var d =$('.direct-chat-messages');
+                        d.append(data);
+                        d.scrollTop(d.prop("scrollHeight"));
+                    },
+                    complete:function () {
+
+                    }
+                });
+            }
+        });
+        $.ajax({
+            type:'GET',
+            url:'/message/getUsers',
+            success:function (data) {
+                $('.contacts-list').append(data);
+            },
+            complete:function () {
+
+            }
+        });
+        //Get Messages
+        $(document).on('click','.contact',function () {
+            receiver_id = $(this).data('id');
+            $.ajax({
+                type:'GET',
+                url:'/message/getMessages',
+                data:{'user_id':receiver_id},
+                success:function (data) {
+                    $('.direct-chat').removeClass('collapsed-card');
+                    var d =$('.direct-chat-messages');
+                    d.html(data);
+                    d.scrollTop(d.prop("scrollHeight"));
+                    $('.card.direct-chat').removeClass('direct-chat-contacts-open');
+                }
+            })
+        });
+
+
+    });
+</script>
+    {{--SSE--}}
+@if(auth()->user())
+    <script>
+        $(document).ready(function () {
+            //    SSE
+            var d =$('.direct-chat-messages');
+            let evtActivity = new EventSource("/SSE", {withCredentials: true});
+
+            evtActivity.onmessage = function(event) {
+
+                var data = JSON.parse(event.data);
+                // Number of unread_messages
+                $('#num_un_read').html(data.unread_messages);
+
+                // Show New Messages
+                d.append(data.new_messages);
+                d.scrollTop(d.prop("scrollHeight"));
+
+                // Show new messages from other users
+                $('.contacts-list').html(data.users);
+
+            };
+            evtActivity.onopen = function(){
+                // console.log('connection is opened.'+evtActivity.readyState);
+            };
+
+            evtActivity.onerror = function(event){
+                // console.log(event)
+            };
+        });
+    </script>
+@endif
 </body>
 </html>

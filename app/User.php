@@ -53,4 +53,22 @@ class User extends Authenticatable
     {
         return $this->hasOne(SocialAccount::class);
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function talkedTo()
+    {
+        return $this->hasMany(Message::class,'from');
+    }
+
+    public function relatedTo()
+    {
+        return $this->hasMany(Message::class,'to');
+    }
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
 }

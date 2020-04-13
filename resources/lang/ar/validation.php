@@ -185,6 +185,8 @@ return [
         'question_ids'          =>'الاسئله',
         'texts.*'               =>'الاسئله النصيه',
         'selections.*'          =>'الاسئله للاحتيار من متعدد',
+        'short_description'     =>'الوصف القصير',
+        'subcategory id'        =>'القسم الفرعي',
 
         'ar'                    =>[
             'name'=>'الاسم باللغه العربيه',

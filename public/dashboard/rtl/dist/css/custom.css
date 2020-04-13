@@ -1,16 +1,22 @@
 *{
     direction: rtl !important;
+    text-align: right;
 }
 input,textarea
 {
     direction: ltr!important;
 }
-.layout-fixed .main-sidebar {
-    right: 0;
-}
 .row
 {
     margin: 0!important;
+}
+.floated.right
+{
+    float: left!important;
+}
+.floated.left
+{
+    float: right!important;
 }
 .card-title
 {
@@ -59,6 +65,34 @@ input,textarea
     left: 15px;
     right: auto;
 }
+.ui.comments .comment .avatar
+{
+    float: right;
+}
+.ui.comments .comment>.avatar~.content
+{
+    margin-left: unset!important;
+    margin-right: 3.5em;
+}
+.direct-chat
+{
+    right: unset!important;
+    left: 20px;
+}
+.contacts-list-img
+{
+    float: right!important;
+}
+.contacts-list-info
+{
+    margin-left: unset!important;
+    margin-right: 45px;
+}
+.contacts-list
+{
+    padding-left: unset!important;
+    padding-right: 0;
+}
 @media (min-width: 992px){
     .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .main-footer, .sidebar-mini.sidebar-collapse .main-header {
         margin-right: 4.6rem!important;
@@ -66,6 +100,66 @@ input,textarea
     .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .main-footer, .sidebar-mini.sidebar-collapse .main-header {
         margin-right: 4.6rem!important;
         margin-left: 0!important;
+    }
+}
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .layout-fixed .main-sidebar {
+        right: unset;
+    }
+    .navbar,
+    .content-wrapper
+    {
+        margin-right: 0!important;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .layout-fixed .main-sidebar {
+        right: unset;
+    }
+    .navbar,
+    .content-wrapper
+    {
+        margin-right: 0!important;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .layout-fixed .main-sidebar {
+        right: unset;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .layout-fixed .main-sidebar {
+        right: 0;
+    }
+    .nav-sidebar
+    {
+        padding-right: 0;
+    }
+    .navbar-nav
+    {
+        padding-right: 0;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .layout-fixed .main-sidebar {
+        right: 0;
+    }
+    .nav-sidebar
+    {
+        padding-right: 0;
+    }
+    .navbar-nav
+    {
+        padding-right: 0;
     }
 }
 

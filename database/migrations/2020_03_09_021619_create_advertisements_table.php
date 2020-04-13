@@ -19,10 +19,15 @@ class CreateAdvertisementsTable extends Migration
             $table->bigInteger('subcategory_id')->unsigned();
 
             $table->string('name');
+            $table->text('short_description');
             $table->string('image')->default('default.png');
             $table->float('price');
+            $table->tinyInteger('price_per');
+            $table->string('place');
+            $table->timestamp('available_at')->default(now());
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');

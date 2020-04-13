@@ -47,6 +47,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>@lang('site.name')</th>
+                                <th>@lang('site.short_description')</th>
                                 <th>@lang('site.subcategory')</th>
                                 <th>@lang('site.user')</th>
                                 <th>@lang('site.price')</th>
@@ -59,28 +60,35 @@
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$advertisement->name}}</td>
+                                    <td>{{$advertisement->short_description}}</td>
                                     <td>{{$advertisement->subcategory->name}}</td>
                                     <td>{{$advertisement->user->name}}</td>
                                     <td>{{$advertisement->price}}</td>
-                                    <td><img src="{{$advertisement->image_path}}" style="width: 100px" class="img-thumbnail" alt=""></td>
+                                    <td>
+                                        @if(is_array($advertisement->image_path))
+                                            <img src="{{$advertisement->image_path[0]}}" style="width: 100px" class="img-thumbnail">
+                                        @else
+                                            <img src="{{$advertisement->image_path}}" style="width: 100px" class="img-thumbnail">
+                                        @endif
+                                    </td>
                                     <td>{{$advertisement->name}}</td>
 
-                                    <td>
+                                    <td class="text-center">
                                         @if(auth()->user()->hasPermission('update_advertisements'))
-                                            <a class="btn btn-info btn-sm" href="{{route('dashboard.advertisements.edit',$advertisement->id)}}"><i class="fa fa-edit px-1"></i>@lang('site.edit')</a>
+                                            <a class="btn btn-info m-1 btn-sm" href="{{route('dashboard.advertisements.edit',$advertisement->id)}}"><i class="fa fa-edit px-1"></i>@lang('site.edit')</a>
                                         @else
-                                            <button disabled class="btn btn-info btn-sm">@lang('site.edit')</button>
+                                            <button disabled class="btn m-1 btn-info btn-sm">@lang('site.edit')</button>
                                         @endif
                                         @if(auth()->user()->hasPermission('delete_advertisements'))
                                             <form class="d-inline-block" action="{{route('dashboard.advertisements.destroy',$advertisement->id)}}" method="post">
                                                 {{csrf_field()}}
                                                 {{method_field('delete')}}
-                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt px-1"></i>@lang('site.delete')</button>
+                                                <button type="submit" class="btn m-1 btn-danger btn-sm"><i class="fa fa-trash-alt px-1"></i>@lang('site.delete')</button>
                                             </form>
                                         @else
-                                            <button disabled class="btn btn-danger btn-sm">@lang('site.delete')</button>
+                                            <button disabled class="btn btn-danger m-1 btn-sm">@lang('site.delete')</button>
                                         @endif
-                                            <a class="btn btn-warning btn-sm" href="{{route('dashboard.advertisements.show',$advertisement->id)}}"><i class="fa fa-info px-1"></i>@lang('site.show_details')</a>
+                                            <a class="btn m-1 btn-warning btn-sm" href="{{route('dashboard.advertisements.show',$advertisement->id)}}"><i class="fa fa-info px-1"></i>@lang('site.show_details')</a>
                                     </td>
                                 </tr>
                             @endforeach

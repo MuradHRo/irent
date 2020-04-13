@@ -25,10 +25,8 @@ Route::group([
         Route::resource('questions','QuestionController')->except('show');
 
         // Advertisement Routes
-        Route::get('/advertisements/getquestions/','AdvertisementController@getquestions');
         Route::resource('advertisements','AdvertisementController');
     });
 
 });
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout')->name('logout');
 

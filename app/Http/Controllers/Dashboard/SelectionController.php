@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class SelectionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read_selections'])->only('index');
+        $this->middleware(['permission:create_selections'])->only('create','store');
+        $this->middleware(['permission:update_selections'])->only('update','edit');
+        $this->middleware(['permission:delete_selections'])->only('destroy');
+
+    }
     /**
      * Display a listing of the resource.
      *

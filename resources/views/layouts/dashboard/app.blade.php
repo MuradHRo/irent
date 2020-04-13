@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="{{asset('dashboard/dist/css/adminlte.min.css')}}">
     <!-- Toaster -->
     <link rel="stylesheet" href="{{asset('dashboard/plugins/toastr/toastr.min.css')}}">
+    <!-- Semantic UI -->
+    <link rel="stylesheet" href="{{asset('dashboard/plugins/semantic-ui/semantic.min.css')}}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{asset('dashboard/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
     <!-- Daterange picker -->
@@ -28,6 +30,8 @@
     <link rel="stylesheet" href="{{asset('dashboard/plugins/summernote/summernote-bs4.css')}}">
     <!-- Select2 -->
     <link rel="stylesheet" href="{{asset('dashboard/plugins/select2/css/select2.min.css')}}">
+    <!-- Semantic UI -->
+    <link rel="stylesheet" href="{{asset('dashboard/plugins/semantic-ui/semantic.min.css')}}">
     {{--CSS--}}
     <link rel="stylesheet" href="{{asset('dashboard/plugins/style.css')}}">
     @if(app()->getLocale()=='en')
@@ -41,7 +45,7 @@
 
     @endif
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
 
 
     @include('layouts.dashboard._navbar')
@@ -113,6 +117,12 @@
 <script src="{{asset('dashboard/plugins/printThis.js')}}"></script>
 {{--Select 2--}}
 <script src="{{asset('dashboard/plugins/select2/js/select2.full.min.js')}}"></script>
+<!-- Semantic UI -->
+<script src="{{asset('dashboard/plugins/semantic-ui/semantic.min.js')}}"></script>
+<!--Algolia places-->
+<script src="https://cdn.jsdelivr.net/npm/places.js@1.18.1"></script>
+<!-- Semantic UI -->
+<script href="{{asset('dashboard/plugins/semantic-ui/semantic.min.js')}}"></script>
 {{-- Custom Java script--}}
                             {{--Selection--}}
 <script src="{{asset('dashboard/dist/js/custom/selections.js')}}"></script>
@@ -143,7 +153,12 @@
     });
 //    Check Editor Initialize
     CKEDITOR.config.language="{{app()->getLocale()}}";
-
+//    algolia
+var placesAutocomplete = places({
+    appId: 'plS3G90OFYMT',
+    apiKey: 'eee42fc88bbf3a54000ddec6e11037f6',
+    container: document.querySelector('#address-input')
+});
 
 
 </script>
