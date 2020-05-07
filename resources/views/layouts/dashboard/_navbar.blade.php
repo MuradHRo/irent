@@ -2,30 +2,27 @@
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item push-menu">
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
+        <li class="nav-item d-sm-inline-block">
             <a href="{{route('index')}}" class="nav-link">@lang('site.home')</a>
         </li>
         @if(!auth()->user())
-            <li class="nav-item d-none d-sm-inline-block">
+            <li class="nav-item d-sm-inline-block">
                 <a href="{{route('login')}}" class="nav-link">@lang('site.login')</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
+            <li class="nav-item d-sm-inline-block">
                 <a href="{{route('register')}}" class="nav-link">@lang('site.register')</a>
             </li>
         @endif
         @if(auth()->user())
             @if(auth()->user()->hasRole('admin|super_admin'))
-                <li class="nav-item d-none d-sm-inline-block">
+                <li class="nav-item d-sm-inline-block">
                     <a href="{{route('dashboard.index')}}" class="nav-link">@lang('site.Dashboard')</a>
                 </li>
             @endif
         @endif
-        {{--<li class="nav-item d-none d-sm-inline-block">--}}
-            {{--<a href="#" class="nav-link">Contact</a>--}}
-        {{--</li>--}}
         <li class="dropdown nav-item">
             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-flag"></i></a>
             <ul class="dropdown-menu">
@@ -43,7 +40,7 @@
             </ul>
         </li>
         @if(auth()->user())
-            <li class="nav-item d-none d-sm-inline-block">
+            <li class="nav-item d-sm-inline-block">
                 <a href="{{route('advertisements.create')}}" class="ui teal button tiny"><i class="fa fa-plus mx-1"></i>@lang('site.add_advertisement')</a>
             </li>
         @endif

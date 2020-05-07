@@ -25,10 +25,11 @@ class SelectionController extends Controller
     {
         $selections=Selection::all();
         $data = [];
-        foreach ($selections as $key => $value) {
+        foreach ($selections as $selection) {
             // -> as it return std object
-            $data[$value->selector_id][$value->id] = $value->name;
+            $data[$selection->selector_id][$selection->id] = $selection->name;
         }
+        dd($data);
         return view('dashboard.selections.index',compact('data','selections'));
     }
 

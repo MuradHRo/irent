@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard</title>
+    <title>@yield('title')</title>
+    <link rel="icon" href="{{asset('uploads/i rent logo 2.1-01.png')}}">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font Awesome -->
@@ -155,6 +156,7 @@
         </div>
         @endif
         @yield('content')
+        @yield('footer')
     </div>
 
     <!-- /.content-wrapper -->
@@ -171,9 +173,7 @@
         <!-- Control sidebar content goes here -->
     </aside>
     <!-- /.control-sidebar -->
-</div>
 <!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="{{asset('dashboard/plugins/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -271,7 +271,10 @@
     var placesAutocomplete = places({
         appId: 'plS3G90OFYMT',
         apiKey: 'eee42fc88bbf3a54000ddec6e11037f6',
-        container: document.querySelector('#address-input')
+        container: document.querySelector('#address-input'),
+        countries: ['eg'], // Search in the United States of America and in the Russian Federation
+        type: 'city', // Search only for cities names
+        aroundLatLngViaIP: false // disable the extra search/boost around the source IP
     });
 
 </script>

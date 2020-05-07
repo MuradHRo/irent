@@ -187,7 +187,10 @@ return [
         'texts.*'               =>'Text Questions',
         'selections.*'          =>'Multi Choice Questions',
         'short_description'     =>'Short Description',
-        'subcategory id'        =>'Subcategory',
+        'sub_category'        =>'Category',
+        'price'                 =>'Price',
+        'price_per'             =>'Price Per',
+        'place'                 =>'Place',
 
         'ar'                    =>[
             'name'=>'Name in Arabic',

@@ -1,28 +1,63 @@
 @extends('layouts.app')
+@section('title', __('site.home'))
 
 @section('content')
-    <div class="search-container mb-3">
+    <div class="search-container">
         <form action="{{route('advertisements.index')}}" method="get">
-            <div class="ui search selection dropdown">
-                <input type="hidden" name="sub_category">
+            <div class="ui search selection dropdown filter-input">
+                <input type="hidden" name="category" id="category">
                 <i class="dropdown icon"></i>
                 <div class="default text">@lang('site.all_categories')</div>
                 <div class="menu">
-                    @foreach($sub_categories as $sub_category)
-                    <div class="item" data-value="{{$sub_category->id}}"><i class="{{$sub_category->icon}}"></i> {{$sub_category->name}}</div>
+                    @foreach($categories as $category)
+                    <div class="item" data-value="{{$category->id}}"><i class="{{$category->icon}}"></i> {{$category->name}}</div>
                     @endforeach
                 </div>
             </div>
+            <span id="sub_categories_list" class="filter-input">
+
+            </span>
             <input name="place" type="search" id="address-input" placeholder="@lang('site.any_place')" />
-            <div class="ui input">
+            <div class="ui input filter-input">
                 <input type="text" name="name" placeholder="@lang('site.advertisement_name')">
             </div>
+            <div id="questions_list" class="filter-input d-inline">
+
+            </div>
+
             <button type="submit" class="ui button green">
                 <i class="search icon"></i> @lang('site.search')
             </button>
         </form>
     </div>
-    <a class="ui red big label mx-2">@lang('site.new')</a>
+    <div class="categories pt-3 px-3" >
+        @php
+            $backgrounds=['#48b86a','#0990d0','#ef406e','#f89728','#159b97','#842e88','#73cfed','#e66e79','#b96827','#b0bc22','#993300','#8CAAAE'];
+        @endphp
+        @foreach($categories as $category)
+            <h4 class="ui header main-category" style="background:{{$backgrounds[array_rand($backgrounds)]}}">
+                <span style="padding: 5px">
+                    <i  class="{{$category->icon}}"></i>
+                </span>
+                <span class="name">{{$category->name}}</span>
+            </h4>
+            <div class="sub-categories">
+                @foreach($category->subcategories as $sub_category)
+                    <div class="li fleft">
+                        <div class="item">
+                            <a href="{{route('advertisements.index',['subcategory_id'=>$sub_category->id])}}" class="link parent">
+                                <i style="background:{{$backgrounds[array_rand($backgrounds)]}} " class="{{$sub_category->icon}} icon--circle"></i>
+                                <span class="font-weight-bold">{{$sub_category->name}}</span>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endforeach
+    </div>
+    @if(count($last_ads))
+    <h3 class="title-olx mt-5 mb-3">@lang('site.new')</h3>
+    @endif
     <div class="ui three doubling stackable cards m-0">
     @foreach($last_ads as $advertisement)
         <div class="ui card">
@@ -64,6 +99,8 @@
         </div>
     @endforeach
     </div>
-    <a class="ui teal big label mx-2">@lang('site.about_us')</a>
-
+    {{--<a class="ui teal big label mx-2">@lang('site.about_us')</a>--}}
+@endsection
+@section('footer')
+@include('layouts._footer')
 @endsection

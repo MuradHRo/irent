@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Advertisement;
+use App\Category;
 use App\Comment;
 use App\Report;
 use App\Subcategory;
 use App\Answer;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class advertisementController extends Controller
@@ -23,29 +27,65 @@ class advertisementController extends Controller
      */
     public function index(Request $request)
     {
-        $sub_categories = Subcategory::all();
+        $categories= Category::all();
         if (isset($request->subcategory_id))
         {
             $subcategory= Subcategory::findOrFail($request->subcategory_id);
             $advertisements=$subcategory->advertisements()->latest()->paginate(15);
-            $category_id = $subcategory->category_id;
-            $subcategory_id=$request->subcategory_id;
         }
         else
         {
-            $advertisements=Advertisement::when($request->sub_category,function ($q) use ($request){
-                return $q->where('subcategory_id',$request->sub_category);
-            })->when($request->place,function ($q) use ($request){
-                return $q->where('place','like','%'.$request->place.'%');
-            })->when($request->name,function ($q)use ($request){
-                return $q->where('name','like','%'.$request->name.'%');
-            })->latest()->paginate(15);
-            $category_id=0;
-            $subcategory_id=0;
+            $advertisements = Advertisement::with(['Subcategory','Answers'])
+                ->join('subcategories','subcategory_id','=','subcategories.id')
+                ->join('answers','advertisements.id','=','answers.advertisement_id')
+                ->select('advertisements.*','subcategories.id','answers.advertisement_id');
+
+
+            if ($request->has('category')&& !empty($request->category)) {
+                if ($request->has('sub_category')&& !empty($request->sub_category)) {
+                    $advertisements
+                        ->where('subcategory_id',$request->sub_category);
+                }
+                else
+                {
+                    $advertisements
+                        ->where('category_id','=',$request->category);
+                }
+            }
+            if ($request->has('place')&& !empty($request->place)) {
+                $advertisements->where('place','like','%'.$request->place.'%');
+            }
+
+            if ($request->has('advertisements.name')&& !empty($request->name)) {
+                $advertisements->where('name','like','%'.$request->name.'%');
+            }
+
+            if ($request->has('selections')) {
+                foreach ($request->selections as $question_id => $selection)
+                {
+                    if(!empty($selection)) {
+                        $advertisements->where('question_id', '=', $question_id)
+                            ->where('selection_id', '=', $selection);
+                    }
+                }
+            }
+
+            if ($request->has('texts')) {
+                foreach ($request->selections as $question_id => $text)
+                {
+                    if (!empty($text)) {
+                        $advertisements->where('question_id', '=', $question_id)
+                            ->where('text', 'like', '%' . $text . '%');
+                    }
+                }
+            }
+
+            $advertisements=$advertisements->latest()->paginate(15);
+
         }
 
 
-        return view('advertisements.index',compact('advertisements','category_id','subcategory_id','subcategory','sub_categories'));
+        return view('advertisements.index',compact('advertisements','subcategory','categories'));
     }
 
     /**
@@ -55,8 +95,8 @@ class advertisementController extends Controller
      */
     public function create()
     {
-        $subcategories= Subcategory::all();
-        return view('advertisements.create',compact('subcategories'));
+        $categories= Category::all();
+        return view('advertisements.create',compact('categories'));
     }
 
     /**
@@ -69,7 +109,7 @@ class advertisementController extends Controller
     {
 
         $request->validate([
-            'subcategory_id'=>'required',
+            'sub_category'=>'required',
             'texts.*'=>'required',
             'selections.*'=>'required',
             'name'=>'required',
@@ -78,7 +118,8 @@ class advertisementController extends Controller
             'price_per'=>'required',
             'place'=>'required'
         ]);
-        $request_data=$request->except('texts','selections','image');
+        $request_data=$request->except('texts','selections','image','sub_category');
+        $request_data['subcategory_id']=$request->sub_category;
         $request_data['user_id']=auth()->user()->id;
 
 
@@ -121,7 +162,7 @@ class advertisementController extends Controller
            'user_weight'=>auth()->user()->user_weight++
         ]);
         session()->flash('success',__('site.added_successfully'));
-        return redirect()->route('advertisements.index',['subcategory_id'=>$request->subcategory_id]);
+        return redirect()->route('advertisements.index',['subcategory_id'=>$request->sub_category]);
     }
 
     /**
@@ -144,9 +185,10 @@ class advertisementController extends Controller
      */
     public function edit(Advertisement $advertisement)
     {
-        $subcategories=Subcategory::all();
+        $categories=Category::all();
+        $sub_categories=Subcategory::all();
         $answers=$advertisement->answers;
-        return view('advertisements.edit',compact('advertisement','subcategories','answers'));
+        return view('advertisements.edit',compact('advertisement','categories','sub_categories','answers'));
     }
 
     /**
@@ -169,7 +211,7 @@ class advertisementController extends Controller
                 'price_per'=>'required',
                 'place'=>'required'
             ]);
-            $request_data = $request->except('texts', 'selections', 'image');
+            $request_data = $request->except('texts', 'selections', 'image','');
 
             // Image
             if ($request->hasFile('image')) {
@@ -317,5 +359,14 @@ class advertisementController extends Controller
             $request_data = $request->except('id');
             $comment->update($request_data);
         }
+    }
+    public function getsubcategories(Request $request)
+    {
+        $request->validate([
+           'category'=>'required'
+        ]);
+        $category = Category::findOrFail($request->category);
+        $sub_categories = $category->subcategories;
+        return view('advertisements._sub_category' , compact('sub_categories'));
     }
 }

@@ -119,9 +119,10 @@
                         <label>@lang('site.price_per')</label>
                         <select name="price_per" class="custom-select">
                             <option value="">@lang('site.price_per')</option>
-                            <option value="0" {{$advertisement->price_per == 0? 'selected':''}}>@lang('site.weak')</option>
-                            <option value="1" {{$advertisement->price_per == 1? 'selected':''}}>@lang('site.month')</option>
-                            <option value="2" {{$advertisement->price_per == 2? 'selected':''}}>@lang('site.year')</option>
+                            <option value="0" {{$advertisement->price_per == 0? 'selected':''}}>@lang('site.day')</option>
+                            <option value="1" {{$advertisement->price_per == 1? 'selected':''}}>@lang('site.weak')</option>
+                            <option value="2" {{$advertisement->price_per == 2? 'selected':''}}>@lang('site.month')</option>
+                            <option value="3" {{$advertisement->price_per == 3? 'selected':''}}>@lang('site.year')</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -186,7 +186,10 @@ return [
         'texts.*'               =>'الاسئله النصيه',
         'selections.*'          =>'الاسئله للاحتيار من متعدد',
         'short_description'     =>'الوصف القصير',
-        'subcategory id'        =>'القسم الفرعي',
+        'sub_category'        =>'القسم',
+        'price'                 =>'السعر',
+        'price_per'             =>'السعر لكل',
+        'place'                 =>'المكان',
 
         'ar'                    =>[
             'name'=>'الاسم باللغه العربيه',

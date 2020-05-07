@@ -82,7 +82,7 @@ class LoginController extends Controller
                 $user->attachRole('user');
             }
         }
-        auth()->login($user);
+        auth()->login($user , true);
         return redirect()->to(RouteServiceProvider::HOME);
     }
 }

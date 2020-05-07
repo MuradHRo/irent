@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', __($advertisement->name))
 @section('content')
 <section class="content">
     <div class="ui modal mini delete-comment">
@@ -26,6 +27,11 @@
         </div>
         <form style="width: 100%;padding: 5px 10px;margin-top: 10px;" class="d-inline-block" action="{{ route('advertisements.mark_unavailable' , $advertisement->id)}}" method="POST">
         <div class="content">
+            <div class="ui warning message">
+                <div class="header">
+                    @lang('site.select_after_today')
+                </div>
+            </div>
             <input type="date" name="available_at" required>
             {{ csrf_field() }}
         </div>
@@ -63,7 +69,7 @@
     <div class="card card-solid mt-3">
         <div class="card-body">
             <div class="row">
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-4">
                     {{--<h3 class="d-inline-block d-sm-none">{{$advertisement->name}}</h3>--}}
                     <div class="col-12">
                         @if(!$advertisement->available_status)
@@ -87,7 +93,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-8">
                     <div style="display: flow-root">
                         <div class="mb-0 ui header blue float-left">{{$advertisement->name}}</div>
                         <div class="float-right">
@@ -110,6 +116,8 @@
                                     @else
                                         @if(!$advertisement->user->hasRole('super_admin')||$advertisement->user->hasRole('admin'))
                                             <div class="item"><a style="color: black" href="{{route('advertisements.report',$advertisement->id)}}">@lang('site.report')</a></div>
+                                        @else
+                                            <div class="item disabled">@lang('site.report')</div>
                                         @endif
                                     @endif
                                 </div>
@@ -119,6 +127,10 @@
                     </div>
                     <div style="color: grey" class="mb-3">{{$advertisement->time_ago}}</div>
                     <p style="font-size: 29px;color: darkslategray;">{{$advertisement->short_description}}</p>
+
+                    <span>
+                        <i class="map marker icon"></i>{{$advertisement->place}}
+                    </span>
 
                     <h4 class="ui horizontal divider header">
                         <i class="bar chart icon"></i>
@@ -141,16 +153,6 @@
                             </tbody>
                         </table>
                     @endif
-                    @if($advertisement->comments->count())
-                    <div class="ui small orange statistic">
-                        <div class="value">
-                            <i class="comment alternate outline icon"></i>{{$advertisement->comments->count()}}
-                        </div>
-                        <div class="label">
-                            @lang('site.comments')
-                        </div>
-                    </div>
-                    @endif
                     <div class="ui horizontal teal statistic">
                         <div class="value">
                             {{$advertisement->price}}
@@ -162,19 +164,6 @@
                     <hr>
                     {{--User--}}
                     @if(auth()->user() && !auth()->user()->owns($advertisement))
-                    {{--<div class="card card-outline d-inline-block">--}}
-                        {{--<div class="card-body box-profile">--}}
-                            {{--<div class="float-left">--}}
-                                {{--<div class="text-center">--}}
-                                    {{--<img class="profile-user-img img-fluid img-circle" src="{{$advertisement->user->image_path}}" alt="User profile picture">--}}
-                                {{--</div>--}}
-
-                                {{--<h4 class="profile-username text-center">{{$advertisement->user->name}}</h4>--}}
-                            {{--</div>--}}
-                            {{--<a  data-id="{{$advertisement->user->id}}" style="cursor: pointer;color: white; margin-top: 40px;margin-left: 20px;" class="btn btn-primary float-right contact"><b>@lang('site.send_msg')</b></a>--}}
-                        {{--</div>--}}
-                        {{--<!-- /.card-body -->--}}
-                    {{--</div>--}}
                         <div class="content">
                             <div class="float-left author">
                                 <a href="{{route('users.profile',$advertisement->user->id)}}" style="color: black">
@@ -191,7 +180,17 @@
             <div class="row mt-4">
                 <nav class="w-100">
                     <div class="nav nav-tabs" id="product-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="product-comments-tab" data-toggle="tab" href="#product-comments" role="tab" aria-controls="product-comments" aria-selected="false">@lang('site.comments')</a>
+                        <a class="nav-item nav-link active" id="product-comments-tab" data-toggle="tab" href="#product-comments" role="tab" aria-controls="product-comments" aria-selected="false">
+                            <span style="font-size: 15px;">@lang('site.comments')</span>
+                            @if($advertisement->comments->count())
+                                {{--({{$advertisement->comments->count()}})--}}
+                                <div class="ui tiny orange statistic">
+                                    <div class="value" style="font-size: 15px;">
+                                        <i class="comment alternate outline icon"></i>{{$advertisement->comments->count()}}
+                                    </div>
+                                </div>
+                            @endif
+                        </a>
                     </div>
                 </nav>
                 <div class="tab-content p-3 w-100" id="nav-tabContent">

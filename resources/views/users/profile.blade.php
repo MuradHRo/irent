@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', __($user->name))
 
 @section('content')
     <section class="content mt-4">
@@ -71,7 +72,7 @@
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
                                     @if($advertisements->count())
-                                        <div class="ui stackable cards m-0">
+                                        <div class="ui two doubling stackable cards m-0">
                                             @foreach($advertisements as $advertisement)
                                                 <div class="ui card">
                                                     {{--<a class="ui red ribbon label">Not Available</a>--}}
@@ -83,7 +84,7 @@
                                                     </div>
                                                     <div class="image">
                                                         <span class="place">
-                                                            <i class="map marker icon"></i>Sharqyah
+                                                            <i class="map marker icon"></i>{{$advertisement->place}}
                                                         </span>
                                                         @if(is_array($advertisement->image_path))
                                                             <img src="{{$advertisement->image_path[0]}}">

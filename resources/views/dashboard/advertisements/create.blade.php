@@ -56,7 +56,7 @@
                         <label>@lang('site.short_description')</label>
                         <textarea name="short_description" class="form-control" cols="30" rows="2" maxlength="50" ></textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group place-create">
                         <label>@lang('site.place')</label>
                         <input name="place" type="search" id="address-input" placeholder="@lang('site.search_place')" />
                     </div>
@@ -88,9 +88,10 @@
                         <label>@lang('site.price_per')</label>
                         <select name="price_per" class="custom-select">
                             <option value="">@lang('site.price_per')</option>
-                            <option value="0">@lang('site.weak')</option>
-                            <option value="1">@lang('site.month')</option>
-                            <option value="2">@lang('site.year')</option>
+                            <option value="0">@lang('site.day')</option>
+                            <option value="1">@lang('site.weak')</option>
+                            <option value="2">@lang('site.month')</option>
+                            <option value="3">@lang('site.year')</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -113,17 +113,19 @@ class Advertisement extends Model
     {
         if (app()->getLocale()=='en') {
             $price_per=array(
-                '0'=>'Per Weak',
-                '1'=>'Per Month',
-                '2'=>'Per Year'
+                '0'=>'Per Day',
+                '1'=>'Per Weak',
+                '2'=>'Per Month',
+                '3'=>'Per Year'
             );
         }
         else
         {
             $price_per=array(
-                '0'=>'لكل اسبوع',
-                '1'=>'لكل شهر',
-                '2'=>'لكل سنه'
+                '0'=>'لكل يوم',
+                '1'=>'لكل اسبوع',
+                '2'=>'لكل شهر',
+                '3'=>'لكل سنه'
             );
         }
         return $price_per[$this->price_per];

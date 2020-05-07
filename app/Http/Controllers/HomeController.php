@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Advertisement;
+use App\Category;
 use App\Events\MyEvent;
 use App\Message;
 use App\Subcategory;
+use App\User;
 use Illuminate\Http\Request;
 use Pusher\Pusher;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -25,9 +27,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $sub_categories = Subcategory::all();
+        $categories= Category::all();
         $last_ads = Advertisement::orderBy('created_at')->take(10)->get();
-        return view('index',compact('last_ads','sub_categories'));
+        return view('index',compact('last_ads','categories'));
     }
     public function sendMessage(Request $request)
     {
@@ -200,5 +202,14 @@ class HomeController extends Controller
         $response->headers->set('X-Accel-Buffering', 'no');
         $response->headers->set('Cach-Control', 'no-cache');
         $response->send();
+    }
+    public function about_us()
+    {
+        return view('us.about_us');
+    }
+    public function contact_us()
+    {
+        $admins = User::whereRoleIs('admin')->orWhereRoleIs('super_admin')->get();
+        return view('us.contact_us',compact('admins'));
     }
 }

@@ -1,13 +1,25 @@
 $(document).ready(function () {
     let body=$('body');
     //ajax Questions
+    $('#category').on('change',function (e) {
+        var category_id= $(this).val();
+        console.log($(this).val());
+        $.ajax({
+            url :'/advertisements/getsubcategories/',
+            method:"get",
+            data:{'category':category_id},
+            success: function (data) {
+                $('#sub_categories_list').html(data);
+            }
+        });
+    });
+    //ajax Questions
     $('#subcategory').on('change',function (e) {
         var subcategory_id= $(this).val();
-        let method=$(this).data('method');
 
         $.ajax({
             url :'/dashboard/advertisements/getquestions/',
-            method:method,
+            method:"get",
             data:{'subcategory_id':subcategory_id},
             success: function (data) {
                 $('#questions_list').html(data);
@@ -134,5 +146,33 @@ $(document).ready(function () {
     $('.rating.read')
         .rating('disable')
     ;
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+
+        if (input.files) {
+            var filesAmount = input.files.length;
+
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                    $($.parseHTML('<img>')).attr('src', event.target.result).attr('class','img-thumbnail mb-3').css('width','100px').appendTo(placeToInsertImagePreview);
+                };
+
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+    };
+
+    $('#gallery-photo-add').on('change', function() {
+        $('div.gallery').html('');
+        imagesPreview(this, 'div.gallery');
+    });
+
+    // toggle subcategories on click Category
+    $('.main-category').on('click',function () {
+       $(this).next('.sub-categories').slideToggle();
+    });
 
 });

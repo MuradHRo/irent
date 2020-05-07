@@ -6,8 +6,13 @@ Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
 ], function() {
+
     //Home
     Route::get('/', 'HomeController@index')->name('index');
+    //About Us
+    Route::get('/about_us', 'HomeController@about_us')->name('about_us');
+    //Contact Us
+    Route::get('/contact_us', 'HomeController@contact_us')->name('contact_us');
 
     //Login Social Accounts
     Route::get('/login/{provider}', 'Auth\LoginController@redirectToProvider')->name('login');
@@ -15,6 +20,7 @@ Route::group([
 
     //Advertisement Routes
     Route::get('/dashboard/advertisements/getquestions/','Dashboard\AdvertisementController@getquestions');
+    Route::get('/advertisements/getsubcategories/','AdvertisementController@getsubcategories');
     Route::get('/advertisements/comment/add/','AdvertisementController@addComment')->middleware('auth');
     Route::get('/advertisements/comment/update/','AdvertisementController@updateComment')->middleware('auth');
     Route::get('/advertisements/comment/delete/','AdvertisementController@deleteComment')->middleware('auth');
@@ -37,5 +43,11 @@ Route::group([
 
     //Auth Routes
     Auth::routes();
+
+    Route::get('command/{com}', function ($com) {
+        /* php artisan migrate */
+        Artisan::call($com);
+        dd("Done");
+    });
 });
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout')->name('logout');
